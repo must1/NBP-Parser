@@ -3,9 +3,6 @@ package pl.parser.nbp.historysystem;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
 
 public class HistorySystemService {
 
@@ -21,14 +18,6 @@ public class HistorySystemService {
             bufferedWriter.newLine();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    String[] retrieveRatesHistory(String rankingFilePath) {
-        try (Stream<String> contentFileStream = Files.lines(Paths.get(rankingFilePath))) {
-            return contentFileStream.toArray(String[]::new);
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
         }
     }
 }

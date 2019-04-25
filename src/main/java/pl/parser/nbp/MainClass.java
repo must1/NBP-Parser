@@ -13,11 +13,12 @@ public class MainClass {
         HistorySystemService historySystemService = new HistorySystemService();
         RateCalculations rateCalculations = new RateCalculations();
         ConditionChecker conditionChecker = new ConditionCheckerService();
-        NBPParserEngine nbpParserEngine = new NBPParserEngine(conditionChecker, dataFetcher,rateCalculations,historySystemService);
+        NBPParserEngine nbpParserEngine = new NBPParserEngine(conditionChecker, dataFetcher, rateCalculations, historySystemService);
 
-        String startDateString = "2013-01-28";
-        String endDateString = "2013-01-31";
-        String currency = "EUR";
-        nbpParserEngine.executeNBPParserEngine(startDateString,endDateString,currency);
+        String currency = args[0];
+        String startDateString = args[1];
+        String endDateString = args[2];
+
+        nbpParserEngine.executeNBPParserEngine(startDateString, endDateString, currency);
     }
 }
