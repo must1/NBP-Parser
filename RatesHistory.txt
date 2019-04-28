@@ -1,3 +1,24 @@
-2013-01-28 till 2013-01-31
+2013-01-28 till 2013-01-31 for USD
+Average buying rate: 3.076075
+Standard deviation of selling rate: 0.010506971
+2013-01-28 till 2013-01-31 for USD
+Average buying rate: 3.076075
+Standard deviation of selling rate: 0.010506971
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-02-15 for USD
+Average buying rate: 3.0680997
+Standard deviation of selling rate: 0.016758494
+2013-01-28 till 2013-02-15 for USD
+Average buying rate: 3.0680997
+Standard deviation of selling rate: 0.016758494
+2013-01-28 till 2013-01-31 for EUR
 Average buying rate: 4.150525
 Standard deviation of selling rate: 0.012477037
