@@ -7,7 +7,6 @@ import pl.parser.nbp.conditionchecker.ConditionCheckerService;
 import pl.parser.nbp.historysystem.HistorySystemService;
 
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 

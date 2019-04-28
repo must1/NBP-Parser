@@ -4,5 +4,5 @@ import java.time.LocalDate;
 
 public interface ConditionChecker {
 
-    boolean checkIfGivenDayIsIncludedInCurrentYear(LocalDate givenDay);
+    boolean isDayIncludedInCurrentYear(LocalDate givenDay);
 }
