@@ -20,6 +20,6 @@ public class MainClass {
         String startDateString = args[1];
         String endDateString = args[2];
 
-        nbpParserEngine.executeNBPParserEngine(startDateString, endDateString, currency);
+        nbpParserEngine.executeNbpParserEngine(startDateString, endDateString, currency);
     }
 }
