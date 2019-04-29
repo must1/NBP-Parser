@@ -24,7 +24,7 @@ public class NBPParserEngineTest {
     @Test
     public void findDaysBetweenFirstAndSecondDate() {
 
-        List<LocalDate> actualDays = nbpParserEngine.findDaysBetweenFirstAndSecondDate("2013-01-28", "2013-01-31");
+        List<LocalDate> actualDays = nbpParserEngine.getDaysBetween("2013-01-28", "2013-01-31");
         List<LocalDate> expectedDays = new LinkedList<>();
 
         expectedDays.add(LocalDate.of(2013, 1, 28));

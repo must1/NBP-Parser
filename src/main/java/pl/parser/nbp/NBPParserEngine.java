@@ -15,12 +15,13 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class NBPParserEngine {
 
-    private static final String KOD_WALUTY = "kod_waluty";
     private static final int YEAR = 0;
+    private static final String CURRENCY_CODE = "kod_waluty";
+    private static final String BUY_RATE_TAG = "kurs_kupna";
+    private static final String SELL_RATE_TAG = "kurs_sprzedazy";
     private ConditionChecker conditionChecker;
     private DataFetcher dataFetcher;
     private RateCalculations rateCalculations;
@@ -37,8 +38,8 @@ class NBPParserEngine {
         this.historySystem = historySystem;
     }
 
-    void executeNBPParserEngine(String startDateString, String endDateString, String currency) {
-        List<LocalDate> daysBetweenFirstAndSecondDate = findDaysBetweenFirstAndSecondDate(startDateString, endDateString);
+    void executeNbpParserEngine(String startDateString, String endDateString, String currency) {
+        List<LocalDate> daysBetweenFirstAndSecondDate = getDaysBetween(startDateString, endDateString);
 
         for (LocalDate iteratedDay : daysBetweenFirstAndSecondDate) {
             if (conditionChecker.isDayIncludedInCurrentYear(iteratedDay))
@@ -46,7 +47,7 @@ class NBPParserEngine {
                     String DIR_SOURCE = "http://www.nbp.pl/kursy/xml/dir.txt";
                     String line = dataFetcher.findLineWithGivenDate(String.valueOf(iteratedDay), DIR_SOURCE);
 
-                    sumBuyingAndSellingRate(line, currency);
+                    fetchBuyingAndSellingRate(line, currency);
 
                 } catch (IOException | SAXException | ParserConfigurationException e) {
                     e.printStackTrace();
@@ -58,7 +59,7 @@ class NBPParserEngine {
                     String DIR_SOURCE = "http://www.nbp.pl/kursy/xml/dir" + iteratedStringArray[YEAR] + ".txt";
                     String line = dataFetcher.findLineWithGivenDate(String.valueOf(iteratedDay), DIR_SOURCE);
 
-                    sumBuyingAndSellingRate(line, currency);
+                    fetchBuyingAndSellingRate(line, currency);
 
                 } catch (IOException | SAXException | ParserConfigurationException e) {
                     e.printStackTrace();
@@ -73,15 +74,13 @@ class NBPParserEngine {
         System.out.println("Result was saved in RatesHistory.txt!");
     }
 
-    List<LocalDate> findDaysBetweenFirstAndSecondDate(String startDateString, String endDateString) {
+    List<LocalDate> getDaysBetween(String startDateString, String endDateString) {
         LocalDate startDate = LocalDate.parse(startDateString);
         LocalDate endDate = LocalDate.parse(endDateString);
-
-        Stream<LocalDate> dates = startDate.datesUntil(endDate.plusDays(1));
-        return dates.collect(Collectors.toList());
+        return startDate.datesUntil(endDate.plusDays(1)).collect(Collectors.toList());
     }
 
-    private void sumBuyingAndSellingRate(String line, String currency) throws ParserConfigurationException, SAXException, IOException {
+    private void fetchBuyingAndSellingRate(String line, String currency) throws ParserConfigurationException, SAXException, IOException {
         if (line == null) {
             return;
         }
@@ -94,29 +93,19 @@ class NBPParserEngine {
 
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
-                if (eElement.getElementsByTagName(KOD_WALUTY).item(0).getTextContent().equals(currency)) {
-                    buyingRate = getBuyingRateFromDOM(eElement);
-                    sellingRate = getSellingRateFromDOM(eElement);
+                if (eElement.getElementsByTagName(CURRENCY_CODE).item(0).getTextContent().equals(currency)) {
+                    buyingRate = getFieldFromDOM(eElement, BUY_RATE_TAG);
+                    sellingRate = getFieldFromDOM(eElement, SELL_RATE_TAG);
                 }
             }
         }
         sumOfBuyingRate += buyingRate;
         sellingRates.add(sellingRate);
-
     }
 
-
-    private float getSellingRateFromDOM(Element eElement) {
-        return Float.parseFloat(eElement
-                .getElementsByTagName("kurs_sprzedazy")
-                .item(0)
-                .getTextContent().replaceAll(",", "."));
-    }
-
-
-    private float getBuyingRateFromDOM(Element eElement) {
+    private float getFieldFromDOM(Element eElement, String tag) {
         return Float.parseFloat((eElement
-                .getElementsByTagName("kurs_kupna")
+                .getElementsByTagName(tag)
                 .item(0)
                 .getTextContent().replaceAll(",", ".")));
     }
