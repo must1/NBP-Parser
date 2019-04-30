@@ -3,10 +3,11 @@ package pl.parser.nbp.historysystem;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class HistorySystemService implements HistorySystem {
 
-    public void overwriteFileWithGivenResult(String currency, float averageBuyingRate, float standardDeviationSellingRate, String startDateString, String endDateString, String rankingFilePath) {
+    public void overwriteFileWithGivenResult(String currency, float averageBuyingRate, float standardDeviationSellingRate, LocalDate startDateString, LocalDate endDateString, String rankingFilePath) {
 
         try (FileWriter writer = new FileWriter(rankingFilePath, true);
              BufferedWriter bufferedWriter = new BufferedWriter(writer)) {

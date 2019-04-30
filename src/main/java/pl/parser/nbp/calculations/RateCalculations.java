@@ -4,8 +4,12 @@ import java.util.List;
 
 public class RateCalculations {
 
-    public float getAverageBuyingRate(float sumOfBuyingRate, int numberOfDays) {
-        return sumOfBuyingRate / numberOfDays;
+    public float getAverageBuyingRate(List<Float> buyingRates) {
+        float sumOfBuyingRate = 0;
+        for (Float iteratedRate : buyingRates) {
+            sumOfBuyingRate += iteratedRate;
+        }
+        return sumOfBuyingRate / buyingRates.size();
     }
 
     public float getStandardDeviationSellingRate(List<Float> sellingRates) {

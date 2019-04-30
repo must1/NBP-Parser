@@ -8,45 +8,51 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import pl.parser.nbp.view.NbpParserView;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 class NBPParserEngine {
 
-    private static final int YEAR = 0;
     private static final String CURRENCY_CODE = "kod_waluty";
     private static final String BUY_RATE_TAG = "kurs_kupna";
     private static final String SELL_RATE_TAG = "kurs_sprzedazy";
+    private static final String NBP_URL_FOR_CURRENT_YEAR = "http://www.nbp.pl/kursy/xml/dir.txt";
+    private static final String HISTORY_FILE = "RatesHistory.txt";
     private ConditionChecker conditionChecker;
     private DataFetcher dataFetcher;
     private RateCalculations rateCalculations;
     private HistorySystem historySystem;
+    private NbpParserView nbpParserView;
     private float buyingRate;
     private float sellingRate;
-    private float sumOfBuyingRate = 0;
     private List<Float> sellingRates = new LinkedList<>();
+    private List<Float> buyingRates = new LinkedList<>();
+    private static final Logger LOGGER = Logger.getLogger(NBPParserEngine.class.getName());
 
-    NBPParserEngine(ConditionChecker conditionChecker, DataFetcher dataFetcher, RateCalculations rateCalculations, HistorySystem historySystem) {
+
+    NBPParserEngine(ConditionChecker conditionChecker, DataFetcher dataFetcher, RateCalculations rateCalculations, HistorySystem historySystem, NbpParserView nbpParserView) {
         this.conditionChecker = conditionChecker;
         this.dataFetcher = dataFetcher;
         this.rateCalculations = rateCalculations;
         this.historySystem = historySystem;
+        this.nbpParserView = nbpParserView;
     }
 
-    void executeNbpParserEngine(String startDateString, String endDateString, String currency) {
+    void executeNbpParserEngine(LocalDate startDateString, LocalDate endDateString, String currency) {
         List<LocalDate> daysBetweenFirstAndSecondDate = getDaysBetween(startDateString, endDateString);
 
         for (LocalDate iteratedDay : daysBetweenFirstAndSecondDate) {
             if (conditionChecker.isDayIncludedInCurrentYear(iteratedDay))
                 try {
-                    String DIR_SOURCE = "http://www.nbp.pl/kursy/xml/dir.txt";
-                    String line = dataFetcher.findLineWithGivenDate(String.valueOf(iteratedDay), DIR_SOURCE);
-
+                    String line = dataFetcher.findLineWithGivenDate(iteratedDay, NBP_URL_FOR_CURRENT_YEAR);
                     fetchBuyingAndSellingRate(line, currency);
 
                 } catch (IOException | SAXException | ParserConfigurationException e) {
@@ -54,29 +60,26 @@ class NBPParserEngine {
                 }
             else {
                 try {
-                    String iteratedDayString = iteratedDay.toString();
-                    String[] iteratedStringArray = iteratedDayString.split("-");
-                    String DIR_SOURCE = "http://www.nbp.pl/kursy/xml/dir" + iteratedStringArray[YEAR] + ".txt";
-                    String line = dataFetcher.findLineWithGivenDate(String.valueOf(iteratedDay), DIR_SOURCE);
+                    String DIR_SOURCE = "http://www.nbp.pl/kursy/xml/dir" + iteratedDay.getYear() + ".txt";
+                    String line = dataFetcher.findLineWithGivenDate(iteratedDay, DIR_SOURCE);
 
                     fetchBuyingAndSellingRate(line, currency);
 
                 } catch (IOException | SAXException | ParserConfigurationException e) {
-                    e.printStackTrace();
+                    LOGGER.log(Level.SEVERE, e.toString(), e);
                 }
             }
         }
-        float averageBuyingRate = rateCalculations.getAverageBuyingRate(sumOfBuyingRate, sellingRates.size());
+
+        float averageBuyingRate = rateCalculations.getAverageBuyingRate(buyingRates);
         float standardDeviationSellingRate = rateCalculations.getStandardDeviationSellingRate(sellingRates);
-        System.out.println("Average buying rate: " + averageBuyingRate);
-        System.out.printf("Standard deviation of selling rate: %.4f\n", standardDeviationSellingRate);
-        historySystem.overwriteFileWithGivenResult(currency, averageBuyingRate, standardDeviationSellingRate, startDateString, endDateString, "RatesHistory.txt");
-        System.out.println("Result was saved in RatesHistory.txt!");
+        nbpParserView.getAverageBuyingRateMessage(averageBuyingRate);
+        nbpParserView.getStandardDeviationSellingRateMessage(standardDeviationSellingRate);
+        historySystem.overwriteFileWithGivenResult(currency, averageBuyingRate, standardDeviationSellingRate, startDateString, endDateString, HISTORY_FILE);
+        nbpParserView.getMessageAboutSavingResultInFile();
     }
 
-    List<LocalDate> getDaysBetween(String startDateString, String endDateString) {
-        LocalDate startDate = LocalDate.parse(startDateString);
-        LocalDate endDate = LocalDate.parse(endDateString);
+    List<LocalDate> getDaysBetween(LocalDate startDate, LocalDate endDate) {
         return startDate.datesUntil(endDate.plusDays(1)).collect(Collectors.toList());
     }
 
@@ -99,7 +102,8 @@ class NBPParserEngine {
                 }
             }
         }
-        sumOfBuyingRate += buyingRate;
+        System.out.println(URL_SOURCE);
+        buyingRates.add(buyingRate);
         sellingRates.add(sellingRate);
     }
 
