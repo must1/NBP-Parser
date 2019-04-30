@@ -102,7 +102,6 @@ class NBPParserEngine {
                 }
             }
         }
-        System.out.println(URL_SOURCE);
         buyingRates.add(buyingRate);
         sellingRates.add(sellingRate);
     }

@@ -7,11 +7,11 @@ import java.time.LocalDate;
 
 public class HistorySystemService implements HistorySystem {
 
-    public void overwriteFileWithGivenResult(String currency, float averageBuyingRate, float standardDeviationSellingRate, LocalDate startDateString, LocalDate endDateString, String rankingFilePath) {
+    public void overwriteFileWithGivenResult(String currency, float averageBuyingRate, float standardDeviationSellingRate, LocalDate startDate, LocalDate endDate, String rankingFilePath) {
 
         try (FileWriter writer = new FileWriter(rankingFilePath, true);
              BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
-            bufferedWriter.write(startDateString + " till " + endDateString + " for " + currency);
+            bufferedWriter.write(startDate + " till " + endDate + " for " + currency);
             bufferedWriter.newLine();
             bufferedWriter.write("Average buying rate: " + averageBuyingRate);
             bufferedWriter.newLine();
