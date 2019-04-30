@@ -12,11 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.time.LocalDate;
 
 class DataFetcher {
-
-    private static final int MONTH = 1;
-    private static final int DAY = 2;
 
     private URLConnection openConnection(String givenURL) throws IOException {
         URL url = new URL(givenURL);
@@ -27,12 +25,11 @@ class DataFetcher {
         return new BufferedReader(new InputStreamReader(createInputStreamToRead(givenURL)));
     }
 
-    String findLineWithGivenDate(String givenDate, String givenURL) throws IOException {
+    String findLineWithGivenDate(LocalDate givenDate, String givenURL) throws IOException {
         BufferedReader bufferedReader = getBufferedReader(givenURL);
-        String[] splittedDay = givenDate.split("-");
         String line;
         while ((line = bufferedReader.readLine()) != null) {
-            if (line.startsWith("c") && line.endsWith(splittedDay[MONTH] + splittedDay[DAY])) {
+            if (line.startsWith("c") && line.endsWith(String.valueOf(givenDate.getMonthValue()) + String.valueOf(givenDate.getDayOfMonth()))) {
                 break;
             }
         }
