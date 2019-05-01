@@ -1,4 +1,4 @@
-package pl.parser.nbp;
+package pl.parser.nbp.contentfetcher;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -14,7 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.time.LocalDate;
 
-class DataFetcher {
+public class XMLDataFetcher {
 
     private URLConnection openConnection(String givenURL) throws IOException {
         URL url = new URL(givenURL);
@@ -25,7 +25,7 @@ class DataFetcher {
         return new BufferedReader(new InputStreamReader(createInputStreamToRead(givenURL)));
     }
 
-    String findLineWithGivenDate(LocalDate givenDate, String givenURL) throws IOException {
+    public String findLineWithGivenDate(LocalDate givenDate, String givenURL) throws IOException {
         BufferedReader bufferedReader = getBufferedReader(givenURL);
         String line;
         while ((line = bufferedReader.readLine()) != null) {
@@ -41,7 +41,7 @@ class DataFetcher {
         return connection.getInputStream();
     }
 
-    Document getXML(String givenURL) throws IOException, ParserConfigurationException, SAXException {
+    public Document getXML(String givenURL) throws IOException, ParserConfigurationException, SAXException {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         URLConnection con = openConnection(givenURL);

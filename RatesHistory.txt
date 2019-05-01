@@ -16,3 +16,30 @@ Standard deviation of selling rate: 0.012477037
 2013-01-28 till 2013-01-31 for EUR
 Average buying rate: 4.150525
 Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EzUR
+Average buying rate: 0.0
+Standard deviation of selling rate: 0.0
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for EUR
+Average buying rate: 4.150525
+Standard deviation of selling rate: 0.012477037
+2013-01-28 till 2013-01-31 for XDR
+Average buying rate: 4.736475
+Standard deviation of selling rate: 0.018239193

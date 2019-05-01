@@ -1,4 +1,4 @@
-package pl.parser.nbp.conditionchecker;
+package pl.parser.nbp.validation;
 
 import org.junit.Test;
 
