@@ -2,8 +2,10 @@ package pl.parser.nbp;
 
 import org.junit.Test;
 import pl.parser.nbp.calculations.RateCalculations;
-import pl.parser.nbp.conditionchecker.ConditionChecker;
-import pl.parser.nbp.conditionchecker.ConditionCheckerService;
+import pl.parser.nbp.contentfetcher.XMLDataFetcher;
+import pl.parser.nbp.model.Rates;
+import pl.parser.nbp.validation.ConditionChecker;
+import pl.parser.nbp.validation.ConditionCheckerService;
 import pl.parser.nbp.historysystem.HistorySystemService;
 import pl.parser.nbp.view.NbpParserView;
 
@@ -15,13 +17,16 @@ import static org.junit.Assert.*;
 
 public class NBPParserEngineTest {
 
-    private DataFetcher dataFetcher = new DataFetcher();
+    private XMLDataFetcher dataFetcher = new XMLDataFetcher();
     private NbpParserView nbpParserView = new NbpParserView();
     private HistorySystemService historySystemService = new HistorySystemService();
     private RateCalculations rateCalculations = new RateCalculations();
     private ConditionChecker conditionChecker = new ConditionCheckerService();
+    private Rates rates = new Rates();
+    private NBPRatesProvider nbpRatesProvider = new NBPRatesProvider(dataFetcher, rates);
 
-    private NBPParserEngine nbpParserEngine = new NBPParserEngine(conditionChecker, dataFetcher, rateCalculations, historySystemService, nbpParserView);
+    private NBPParserEngine nbpParserEngine = new NBPParserEngine(conditionChecker, rateCalculations,
+            historySystemService, nbpParserView, nbpRatesProvider, rates, dataFetcher);
 
     @Test
     public void findDaysBetweenFirstAndSecondDate() {
