@@ -4,11 +4,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import pl.parser.nbp.contentfetcher.XMLDataFetcher;
 import pl.parser.nbp.model.Rates;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 class NBPRatesProvider {
@@ -18,8 +16,6 @@ class NBPRatesProvider {
     private static final String SELL_RATE_TAG = "kurs_sprzedazy";
     private static final String TAG_NAME = "pozycja";
     private Rates rates;
-    private float buyingRate;
-    private float sellingRate;
     private XMLDataFetcher dataFetcher;
 
     NBPRatesProvider(XMLDataFetcher dataFetcher, Rates rates) {
@@ -27,7 +23,10 @@ class NBPRatesProvider {
         this.rates = rates;
     }
 
-    Rates getRates(String line, String currency) throws ParserConfigurationException, SAXException, IOException {
+    Rates getRates(String line, String currency) throws IOException {
+        float buyingRate = 0;
+        float sellingRate = 0;
+
         if (line != null) {
 
             String URL_SOURCE = "http://www.nbp.pl/kursy/xml/" + line + ".xml";

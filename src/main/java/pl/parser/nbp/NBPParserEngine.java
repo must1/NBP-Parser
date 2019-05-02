@@ -5,10 +5,8 @@ import pl.parser.nbp.contentfetcher.XMLDataFetcher;
 import pl.parser.nbp.model.Rates;
 import pl.parser.nbp.validation.ConditionChecker;
 import pl.parser.nbp.historysystem.HistorySystem;
-import org.xml.sax.SAXException;
 import pl.parser.nbp.view.NbpParserView;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -49,18 +47,20 @@ class NBPParserEngine {
                     String line = dataFetcher.findLineWithGivenDate(iteratedDay, NBP_URL_FOR_CURRENT_YEAR);
                     rates = nbpRatesProvider.getRates(line, currency);
 
-                } catch (IOException | SAXException | ParserConfigurationException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
+                } catch (IOException e) {
+                    LOGGER.log(Level.SEVERE, "IOException was thrown!", e);
+                    System.exit(1);
                 }
             else {
                 try {
-                    String DIR_SOURCE = "http://www.nbp.pl/kursy/xml/dir" + iteratedDay.getYear() + ".txt";
-                    String line = dataFetcher.findLineWithGivenDate(iteratedDay, DIR_SOURCE);
+                    String dirSource = "http://www.nbp.pl/kursy/xml/dir" + iteratedDay.getYear() + ".txt";
+                    String line = dataFetcher.findLineWithGivenDate(iteratedDay, dirSource);
 
                     rates = nbpRatesProvider.getRates(line, currency);
 
-                } catch (IOException | SAXException | ParserConfigurationException e) {
-                    LOGGER.log(Level.SEVERE, e.toString(), e);
+                } catch (IOException e) {
+                    LOGGER.log(Level.SEVERE, "IOException was thrown!", e);
+                    System.exit(1);
                 }
             }
         }

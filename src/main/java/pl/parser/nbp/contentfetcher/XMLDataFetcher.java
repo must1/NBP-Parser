@@ -12,17 +12,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.ProviderException;
 import java.time.LocalDate;
 
 public class XMLDataFetcher {
 
-    private URLConnection openConnection(String givenURL) throws IOException {
-        URL url = new URL(givenURL);
-        return url.openConnection();
-    }
-
-    private BufferedReader getBufferedReader(String givenURL) throws IOException {
-        return new BufferedReader(new InputStreamReader(createInputStreamToRead(givenURL)));
+    public Document getXML(String givenURL) throws IOException {
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            URLConnection con = openConnection(givenURL);
+            try (InputStream is = con.getInputStream()) {
+                return dBuilder.parse(is);
+            }
+        } catch (ParserConfigurationException | SAXException e) {
+            throw new ProviderException("Error with file processing!");
+        }
     }
 
     public String findLineWithGivenDate(LocalDate givenDate, String givenURL) throws IOException {
@@ -36,17 +41,17 @@ public class XMLDataFetcher {
         return line;
     }
 
+    private URLConnection openConnection(String givenURL) throws IOException {
+        URL url = new URL(givenURL);
+        return url.openConnection();
+    }
+
+    private BufferedReader getBufferedReader(String givenURL) throws IOException {
+        return new BufferedReader(new InputStreamReader(createInputStreamToRead(givenURL)));
+    }
+
     private InputStream createInputStreamToRead(String givenURL) throws IOException {
         URLConnection connection = openConnection(givenURL);
         return connection.getInputStream();
-    }
-
-    public Document getXML(String givenURL) throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        URLConnection con = openConnection(givenURL);
-        try (InputStream is = con.getInputStream()) {
-            return dBuilder.parse(is);
-        }
     }
 }
