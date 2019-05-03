@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Rates {
+
     private List<Float> buyingRates = new ArrayList<>();
     private List<Float> sellingRates = new ArrayList<>();
 

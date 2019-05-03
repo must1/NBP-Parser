@@ -15,6 +15,7 @@ class NBPRatesProvider {
     private static final String BUY_RATE_TAG = "kurs_kupna";
     private static final String SELL_RATE_TAG = "kurs_sprzedazy";
     private static final String TAG_NAME = "pozycja";
+    private static final String URL_SOURCE = "http://www.nbp.pl/kursy/xml/%s.xml";
     private Rates rates;
     private XMLDataFetcher dataFetcher;
 
@@ -28,9 +29,8 @@ class NBPRatesProvider {
         float sellingRate = 0;
 
         if (line != null) {
-
-            String URL_SOURCE = "http://www.nbp.pl/kursy/xml/" + line + ".xml";
-            Document doc = dataFetcher.getXML(URL_SOURCE);
+            String urlSource = String.format(URL_SOURCE, line);
+            Document doc = dataFetcher.getXML(urlSource);
             NodeList nList = doc.getElementsByTagName(TAG_NAME);
 
             for (int temp = 0; temp < nList.getLength(); temp++) {

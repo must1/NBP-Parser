@@ -38,6 +38,7 @@ public class XMLDataFetcher {
                 break;
             }
         }
+        bufferedReader.close();
         return line;
     }
 
