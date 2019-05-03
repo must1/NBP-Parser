@@ -19,6 +19,7 @@ class NBPParserEngine {
     private static final String NBP_URL_FOR_CURRENT_YEAR = "http://www.nbp.pl/kursy/xml/dir.txt";
     private static final String HISTORY_FILE = "RatesHistory.txt";
     private static final Logger LOGGER = Logger.getLogger(NBPParserEngine.class.getName());
+    private static final String NBP_URL_ANOTHER_THAN_CURRENT_YEAR = "http://www.nbp.pl/kursy/xml/dir%d.txt";
     private ConditionChecker conditionChecker;
     private RateCalculations rateCalculations;
     private HistorySystem historySystem;
@@ -38,7 +39,6 @@ class NBPParserEngine {
     }
 
     void executeNbpParserEngine(LocalDate startDate, LocalDate endDate, String currency) {
-
         List<LocalDate> daysBetweenFirstAndSecondDate = getDaysBetween(startDate, endDate);
 
         for (LocalDate iteratedDay : daysBetweenFirstAndSecondDate) {
@@ -53,7 +53,7 @@ class NBPParserEngine {
                 }
             else {
                 try {
-                    String dirSource = "http://www.nbp.pl/kursy/xml/dir" + iteratedDay.getYear() + ".txt";
+                    String dirSource = String.format(NBP_URL_ANOTHER_THAN_CURRENT_YEAR, iteratedDay.getYear());
                     String line = dataFetcher.findLineWithGivenDate(iteratedDay, dirSource);
 
                     rates = nbpRatesProvider.getRates(line, currency);
@@ -67,10 +67,10 @@ class NBPParserEngine {
 
         float averageBuyingRate = rateCalculations.getAverageBuyingRate(rates.getBuyingRates());
         float standardDeviationSellingRate = rateCalculations.getStandardDeviationSellingRate(rates.getSellingRates());
-        nbpParserView.getAverageBuyingRateMessage(averageBuyingRate);
-        nbpParserView.getStandardDeviationSellingRateMessage(standardDeviationSellingRate);
+        nbpParserView.executeAverageBuyingRateMessage(averageBuyingRate);
+        nbpParserView.executeStandardDeviationSellingRateMessage(standardDeviationSellingRate);
         historySystem.overwriteFileWithGivenResult(currency, averageBuyingRate, standardDeviationSellingRate, startDate, endDate, HISTORY_FILE);
-        nbpParserView.getMessageAboutSavingResultInFile();
+        nbpParserView.executeMessageAboutSavingResultInFile();
     }
 
     List<LocalDate> getDaysBetween(LocalDate startDate, LocalDate endDate) {
